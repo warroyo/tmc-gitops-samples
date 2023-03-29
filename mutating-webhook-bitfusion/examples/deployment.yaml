@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: web
+  namespace: bitfusion
+spec:
+  selector:
+    matchLabels:
+      app: web
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: web
+      annotations:
+        test: test
+    spec:
+      containers:
+        - name: nginx
+          image: harbor-repo.vmware.com/dockerhub-proxy-cache/library/nginx
+          resources:
+            limits:
+              bitfusion.io/gpu-amount: 1
+              bitfusion.io/gpu-percent: 1
+          ports:
+          - containerPort: 80

@@ -1,0 +1,70 @@
+apiVersion: mutations.gatekeeper.sh/v1
+kind: Assign
+metadata:
+  name: bitfusion-auto-management
+spec:
+  applyTo:
+  - groups: ["apps"]
+    kinds: ["Deployment"]
+    versions: ["v1"]
+  match:
+    scope: Namespaced
+    kinds:
+    - apiGroups: ["*"]
+      kinds: ["Deployment"]
+#this will only run on namespaces with the below label.
+    namespaceSelector:
+      matchExpressions:
+      - key: bitfusiondeviceplugin/enabled
+        operator: Exists
+  location: spec.template.metadata.annotations."auto-management/bitfusion"
+  parameters:
+    assign:
+      value: all
+
+---
+apiVersion: mutations.gatekeeper.sh/v1
+kind: Assign
+metadata:
+  name: bitfusion-os
+spec:
+  applyTo:
+  - groups: ["apps"]
+    kinds: ["Deployment"]
+    versions: ["v1"]
+  match:
+    scope: Namespaced
+    kinds:
+    - apiGroups: ["*"]
+      kinds: ["Deployment"]
+    namespaceSelector:
+      matchExpressions:
+      - key: bitfusiondeviceplugin/enabled
+        operator: Exists
+  location: spec.template.metadata.annotations."bitfusion-client/os"
+  parameters:
+    assign:
+      value: centos7
+---
+apiVersion: mutations.gatekeeper.sh/v1
+kind: Assign
+metadata:
+  name: bitfusion-version
+spec:
+  applyTo:
+  - groups: ["apps"]
+    kinds: ["Deployment"]
+    versions: ["v1"]
+  match:
+    scope: Namespaced
+    kinds:
+    - apiGroups: ["*"]
+      kinds: ["Deployment"]
+    namespaceSelector:
+      matchExpressions:
+      - key: bitfusiondeviceplugin/enabled
+        operator: Exists
+  location: spec.template.metadata.annotations."bitfusion-client/version"
+  parameters:
+    assign:
+      value: "450"

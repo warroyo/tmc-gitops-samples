@@ -1,0 +1,27 @@
+apiVersion: mutations.gatekeeper.sh/v1
+kind: Assign
+metadata:
+  name: bitfusion-command
+spec:
+  applyTo:
+  - groups: ["apps"]
+    kinds: ["Deployment"]
+    versions: ["v1"]
+  match:
+    scope: Namespaced
+    kinds:
+    - apiGroups: ["*"]
+      kinds: ["Deployment"]
+    namespaceSelector:
+      matchExpressions:
+      - key: bitfusiondeviceplugin/enabled
+        operator: Exists
+  #this container name should match the name of the container that is running the workload that needs bitfusion
+  location: spec.template.spec.containers[name:nginx].command
+  parameters:
+    assign:
+      value: ["/usr/bin/docker-entrpoint.sh"]
+    pathTests:
+    #this container name should match the name of the container that is running the workload that needs bitfusion
+    - subPath: "spec.template.spec.containers[name:nginx].command"
+      condition: MustNotExist
