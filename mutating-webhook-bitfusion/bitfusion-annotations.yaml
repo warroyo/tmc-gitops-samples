@@ -62,7 +62,7 @@ spec:
     labelSelector:
       matchExpressions:
       - key: bitfusion-mutate-enabled
-        operator: Existsts
+        operator: Exists
   location: spec.template.metadata.annotations."bitfusion-client/version"
   parameters:
     assign:
