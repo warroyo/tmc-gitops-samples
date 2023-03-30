@@ -1,0 +1,20 @@
+## this will add a label to the deployments that match so that we can do easier matching in the following mutates
+# prefixing with 0 will ensure it runs first
+apiVersion: mutations.gatekeeper.sh/v1
+kind: AssignMetadata
+metadata:
+  name: 0-bitfusion-label
+spec:
+  match:
+    scope: Namespaced
+    kinds:
+    - apiGroups: ["*"]
+      kinds: ["Deployment"]
+    namespaceSelector:
+      matchExpressions:
+      - key: bitfusiondeviceplugin/enabled
+        operator: Exists
+  location: "metadata.labels.bitfusion-mutate-enabled"
+  parameters:
+    assign:
+      value: "true"

@@ -12,10 +12,9 @@ spec:
     kinds:
     - apiGroups: ["*"]
       kinds: ["Deployment"]
-#this will only run on namespaces with the below label.
-    namespaceSelector:
+    labelSelector:
       matchExpressions:
-      - key: bitfusiondeviceplugin/enabled
+      - key: bitfusion-enabled
         operator: Exists
   location: spec.template.metadata.annotations."auto-management/bitfusion"
   parameters:
@@ -37,9 +36,9 @@ spec:
     kinds:
     - apiGroups: ["*"]
       kinds: ["Deployment"]
-    namespaceSelector:
+    labelSelector:
       matchExpressions:
-      - key: bitfusiondeviceplugin/enabled
+      - key: bitfusion-enabled
         operator: Exists
   location: spec.template.metadata.annotations."bitfusion-client/os"
   parameters:
@@ -60,10 +59,10 @@ spec:
     kinds:
     - apiGroups: ["*"]
       kinds: ["Deployment"]
-    namespaceSelector:
+    labelSelector:
       matchExpressions:
-      - key: bitfusiondeviceplugin/enabled
-        operator: Exists
+      - key: bitfusion-enabled
+        operator: Existsts
   location: spec.template.metadata.annotations."bitfusion-client/version"
   parameters:
     assign:
