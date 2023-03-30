@@ -14,7 +14,7 @@ spec:
       kinds: ["Deployment"]
     labelSelector:
       matchExpressions:
-      - key: bitfusion-enabled
+      - key: bitfusion-mutate-enabled
         operator: Exists
   location: spec.template.metadata.annotations."auto-management/bitfusion"
   parameters:
@@ -38,7 +38,7 @@ spec:
       kinds: ["Deployment"]
     labelSelector:
       matchExpressions:
-      - key: bitfusion-enabled
+      - key: bitfusion-mutate-enabled
         operator: Exists
   location: spec.template.metadata.annotations."bitfusion-client/os"
   parameters:
@@ -61,7 +61,7 @@ spec:
       kinds: ["Deployment"]
     labelSelector:
       matchExpressions:
-      - key: bitfusion-enabled
+      - key: bitfusion-mutate-enabled
         operator: Existsts
   location: spec.template.metadata.annotations."bitfusion-client/version"
   parameters:

@@ -14,7 +14,7 @@ spec:
       kinds: ["Deployment"]
     labelSelector:
       matchExpressions:
-      - key: bitfusion-enabled
+      - key: bitfusion-mutate-enabled
         operator: Exists
   #this container name should match the name of the container that is running the workload that needs bitfusion
   location: spec.template.spec.containers[name:nginx].command
