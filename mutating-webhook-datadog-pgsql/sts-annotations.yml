@@ -1,7 +1,7 @@
 apiVersion: mutations.gatekeeper.sh/v1
 kind: Assign
 metadata:
-  name: datadog-annotations
+  name: datadog-metrics
 spec:
   applyTo:
   - groups: ["apps"]
@@ -42,4 +42,31 @@ spec:
             }
     pathTests:
     - subPath: spec.template.metadata.annotations."ad.datadoghq.com/postgres-metrics-exporter.checks"
+      condition: MustNotExist
+
+---
+apiVersion: mutations.gatekeeper.sh/v1
+kind: Assign
+metadata:
+  name: datadog-tags
+spec:
+  applyTo:
+  - groups: ["apps"]
+    kinds: ["StatefulSet"]
+    versions: ["v1"]
+  match:
+    scope: Namespaced
+    namespaces: ["postgres-databases"]
+    kinds:
+    - apiGroups: ["*"]
+      kinds: ["StatefulSet"]
+    labelSelector:
+      matchLabels:
+        app: postgres
+  location: spec.template.metadata.annotations."ad.datadoghq.com/tags"
+  parameters:
+    assign:
+      value: '{"tanzu_sql": "postgres"}'
+    pathTests:
+    - subPath: spec.template.metadata.annotations."ad.datadoghq.com/tags"
       condition: MustNotExist
