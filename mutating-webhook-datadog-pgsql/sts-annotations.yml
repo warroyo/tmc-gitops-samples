@@ -1,0 +1,45 @@
+apiVersion: mutations.gatekeeper.sh/v1
+kind: Assign
+metadata:
+  name: datadog-annotations
+spec:
+  applyTo:
+  - groups: ["apps"]
+    kinds: ["StatefulSet"]
+    versions: ["v1"]
+  match:
+    scope: Namespaced
+    namespaces: ["postgres-databases"]
+    kinds:
+    - apiGroups: ["*"]
+      kinds: ["StatefulSet"]
+    labelSelector:
+      matchLabels:
+        app: postgres
+  location: spec.template.metadata.annotations."ad.datadoghq.com/postgres-metrics-exporter.checks"
+  parameters:
+    assign:
+      value: |
+        {
+              "openmetrics": {
+              "init_config": {},
+              "instances": [
+                {
+                   "openmetrics_endpoint":"https://%%host%%:%%port%%/metrics",
+                   "namespace": "tanzu_sql_",
+                   "metrics": [
+                        "pg_database_size_bytes",
+                        "pg_stat_acitvity_count",
+                        "pg_stat_acitvity_max_tx_duration",
+                        "pg_locks_count",
+                        "pg_stat_database_blks_read.count",
+                        "pg_stat_database_numbackends"
+                   ],
+                   "tls_verify": false
+                }
+               ]
+             }
+            }
+    pathTests:
+    - subPath: spec.template.metadata.annotations."ad.datadoghq.com/postgres-metrics-exporter.checks"
+      condition: MustNotExist
